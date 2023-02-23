@@ -25,6 +25,10 @@ inputs:
     description: "Enable the default features of a crate while running the benchmark, usually the default features are enabled"
     required: false
     default: true
+  prettyName:
+    description: "A pretty name to add to the PR comment output, useful for matrix based benchmarks"
+    required: false
+    default: ""
 runs:
   using: "node16"
   main: "dist/index.js"
