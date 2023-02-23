@@ -13,6 +13,7 @@ async function main() {
     benchName: core.getInput("benchName"),
     features: core.getInput("features"),
     defaultFeatures: core.getInput("defaultFeatures"),
+    prettyName: core.getInput("prettyName"),
   };
   core.debug(`Inputs: ${inspect(inputs)}`);
 
@@ -73,7 +74,7 @@ async function main() {
   core.setOutput("stdout", myOutput);
   core.setOutput("stderr", myError);
 
-  const resultsAsMarkdown = convertToMarkdown(myOutput);
+  const resultsAsMarkdown = convertToMarkdown(myOutput, prettyName);
 
   // An authenticated instance of `@octokit/rest`
   const octokit = github.getOctokit(inputs.token);
@@ -136,7 +137,7 @@ function isSignificant(changesDur, changesErr, baseDur, baseErr) {
   }
 }
 
-function convertToMarkdown(results) {
+function convertToMarkdown(results, prettyName) {
   /* Example results:
     group                            base                                   changes
     -----                            ----                                   -------
@@ -229,7 +230,11 @@ function convertToMarkdown(results) {
     .join("\n");
 
   let shortSha = context.sha.slice(0, 7);
-  return `## Benchmark for ${shortSha}
+
+  if (prettyName) {
+    prettyName += " ";
+  }
+  return `## Benchmark for ${prettyName}${shortSha}
   <details>
     <summary>Click to view benchmark</summary>
 
