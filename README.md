@@ -38,6 +38,8 @@ jobs:
           branchName: ${{ github.base_ref }}
           # Optional. Default is `${{ github.token }}`.
           token: ${{ secrets.GITHUB_TOKEN }}
+          # Optional. Adds a string to each output comment with the name of the given test, useful in matrix runs.
+          prettyName: "CPU Benchmark"
 ```
 
 ## Troubleshooting
