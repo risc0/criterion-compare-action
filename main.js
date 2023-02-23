@@ -230,7 +230,11 @@ function convertToMarkdown(results, prettyName) {
     .join("\n");
 
   let shortSha = context.sha.slice(0, 7);
-  return `## Benchmark for ${prettyName} ${shortSha}
+
+  if (prettyName) {
+    prettyName += " ";
+  }
+  return `## Benchmark for ${prettyName}${shortSha}
   <details>
     <summary>Click to view benchmark</summary>
 
