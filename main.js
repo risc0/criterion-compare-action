@@ -73,7 +73,7 @@ async function main() {
   core.setOutput("stdout", myOutput);
   core.setOutput("stderr", myError);
 
-  const resultsAsMarkdown = convertToMarkdown(myOutput);
+  const resultsAsMarkdown = convertToMarkdown(myOutput, inputs.prettyName);
 
   // An authenticated instance of `@octokit/rest`
   const octokit = github.getOctokit(inputs.token);
