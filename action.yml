@@ -25,6 +25,10 @@ inputs:
     description: "Enable the default features of a crate while running the benchmark, usually the default features are enabled"
     required: false
     default: true
+  outputMarkdown:
+    description: "Disables comment creation and just creates a action output named `markdown` containing the markdown of the comment"
+    required: false
+    default: false
 runs:
   using: "node16"
   main: "dist/index.js"

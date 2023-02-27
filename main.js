@@ -13,6 +13,7 @@ async function main() {
     benchName: core.getInput("benchName"),
     features: core.getInput("features"),
     defaultFeatures: core.getInput("defaultFeatures"),
+    outputMarkdown: core.getInput("outputMarkdown"),
   };
   core.debug(`Inputs: ${inspect(inputs)}`);
 
@@ -74,6 +75,13 @@ async function main() {
   core.setOutput("stderr", myError);
 
   const resultsAsMarkdown = convertToMarkdown(myOutput);
+
+  // Exit early after setting output field.
+  if (outputMarkdown) {
+    core.setOutput("markdown", resultsAsMarkdown);
+    console.info("Successfully set markdown as output");
+    return;
+  }
 
   // An authenticated instance of `@octokit/rest`
   const octokit = github.getOctokit(inputs.token);
