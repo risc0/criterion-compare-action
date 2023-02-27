@@ -78,7 +78,7 @@ async function main() {
   const resultsAsMarkdown = convertToMarkdown(myOutput, inputs.prettyName);
 
   // Exit early after setting output field.
-  if (outputMarkdown) {
+  if (inputs.outputMarkdown) {
     core.setOutput("markdown", resultsAsMarkdown);
     console.info("Successfully set markdown as output");
     return;
