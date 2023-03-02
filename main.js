@@ -13,6 +13,7 @@ async function main() {
     benchName: core.getInput("benchName"),
     features: core.getInput("features"),
     defaultFeatures: core.getInput("defaultFeatures"),
+    outputMarkdown: core.getInput("outputMarkdown"),
     prettyName: core.getInput("prettyName"),
   };
   core.debug(`Inputs: ${inspect(inputs)}`);
@@ -75,6 +76,13 @@ async function main() {
   core.setOutput("stderr", myError);
 
   const resultsAsMarkdown = convertToMarkdown(myOutput, inputs.prettyName);
+
+  // Exit early after setting output field.
+  if (inputs.outputMarkdown) {
+    core.setOutput("markdown", resultsAsMarkdown);
+    console.info("Successfully set markdown as output");
+    return;
+  }
 
   // An authenticated instance of `@octokit/rest`
   const octokit = github.getOctokit(inputs.token);
@@ -253,9 +261,10 @@ function convertToMarkdown(results, prettyName) {
   if (prettyName) {
     prettyName += " ";
   }
+  // NOTE: use <details open> for default expansion of the block.
   return `## Benchmark for ${prettyName}${shortSha}
-<details>
-  <summary>Click to view benchmark</summary>
+<details open>
+  <summary>Click to hide benchmark</summary>
 
 | Test | Base         | PR               | % |
 |------|--------------|------------------|---|

@@ -25,10 +25,19 @@ inputs:
     description: "Enable the default features of a crate while running the benchmark, usually the default features are enabled"
     required: false
     default: true
+  outputMarkdown:
+    description: "Disables comment creation and just creates a action output named `markdown` containing the markdown of the comment"
+    required: false
+    default: false
   prettyName:
     description: "A pretty name to add to the PR comment output, useful for matrix based benchmarks"
     required: false
     default: ""
+
+outputs:
+  markdown:
+    description: "Optional output from the 'outputMarkdown' input feature"
+
 runs:
   using: "node16"
   main: "dist/index.js"
