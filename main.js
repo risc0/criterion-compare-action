@@ -261,9 +261,10 @@ function convertToMarkdown(results, prettyName) {
   if (prettyName) {
     prettyName += " ";
   }
+  // NOTE: use <details open> for default expansion of the block.
   return `## Benchmark for ${prettyName}${shortSha}
-<details>
-  <summary>Click to view benchmark</summary>
+<details open>
+  <summary>Click to hide benchmark</summary>
 
 | Test | Base         | PR               | % |
 |------|--------------|------------------|---|
