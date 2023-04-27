@@ -58,7 +58,6 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
         -------------
         new      1.00        2.1±0.02s  15.3 KElem/sec
         base     1.03        2.1±0.02s  14.9 KElem/sec
-// const utils = require("../utils");
 
         fib/200/run
         -----------
@@ -68,6 +67,16 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
 
     let resultLines = results.trimRight().split("\n");
     let lines = resultLines.filter(line => !line.startsWith("--") && line != "");
+
+    if (!(lines[1].startsWith("changes") && lines[2].startsWith("base"))) {
+        return `## Benchmark for ${prettyName}
+        <details open>
+          <summary>Click to hide benchmark</summary>
+          Benchmarks have changed between the two branches, unable to diff.
+        </details>
+        `;
+    }
+
     let benchResults = chunks(lines, 3).map(([name, changes, base]) => {
         let [_baseName, baseFactor, baseDuration, baseBandwidth] = splitResultsLine(base);
         let [_changesName, changesFactor, changesDuration, changesBandwidth] = splitResultsLine(changes);
