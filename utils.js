@@ -70,7 +70,7 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
 
     if (!(lines[1].startsWith("changes") && lines[2].startsWith("base"))) {
         return `## Benchmark for ${prettyName}
-        <details open>
+        <details close>
           <summary>Click to hide benchmark</summary>
           Benchmarks have changed between the two branches, unable to diff.
         </details>
@@ -157,10 +157,10 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
     }
     // NOTE: use <details open> for default expansion of the block.
     return `## Benchmark for ${prettyName}${shortSha}
-  <details open>
+  <details close>
     <summary>Click to hide benchmark</summary>
   
-  | Test | Base         | PR               | % |
+  | Daisy Test | Base         | PR               | % |
   |------|--------------|------------------|---|
   ${benchResults}
   
