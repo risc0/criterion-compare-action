@@ -78,10 +78,9 @@ async function main() {
   core.setOutput("stderr", myError);
 
   let resultsAsMarkdown = utils.convertToMarkdown(context.sha, myOutput, inputs.prettyName);
-  benchmarkResults.append(resultsAsMarkdown);
   // Exit early after setting output field.
   if (inputs.outputMarkdown) {
-    core.setOutput("markdown", benchmarkResults);
+    core.setOutput("markdown", resultsAsMarkdown);
     console.info("Successfully set markdown as output");
     return;
   }
@@ -96,7 +95,7 @@ async function main() {
       owner: contextObj.owner,
       repo: contextObj.repo,
       issue_number: contextObj.number,
-      body: benchmarkResults,
+      body: resultsAsMarkdown,
     });
     core.info(
       `Created comment id '${comment.id}' on issue '${contextObj.number}' in '${contextObj.repo}'.`
