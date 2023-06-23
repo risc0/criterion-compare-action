@@ -69,8 +69,10 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
     let lines = resultLines.filter(line => !line.startsWith("--") && line != "");
 
     if (!(lines[1].startsWith("changes") && lines[2].startsWith("base"))) {
-        return `## Benchmark for ${prettyName}
+        return `
         <details close>
+        ## Benchmark for ${prettyName}
+        
           <summary>Click to hide benchmark</summary>
           Benchmarks have changed between the two branches, unable to diff.
         </details>
