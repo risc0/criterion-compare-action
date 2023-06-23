@@ -156,8 +156,9 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
         prettyName += " ";
     }
     // NOTE: use <details open> for default expansion of the block.
-    return `## Benchmark for ${prettyName}${shortSha}
-  <details close>
+    return `
+    <details close>
+    ## Benchmark for ${prettyName}${shortSha}
     <summary>Click to hide benchmark</summary>
   
   | Daisy Test | Base         | PR               | % |
