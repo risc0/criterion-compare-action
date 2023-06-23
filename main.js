@@ -99,7 +99,10 @@ async function main() {
       owner: contextObj.owner,
       repo: contextObj.repo,
       issue_number: contextObj.number,
-      body: collapsableResults,
+      body: ` <details>
+      <summary>Click to Expand</summary>
+      ${collapsableResults}
+      </details>`,
     });
     core.info(
       `Created comment id '${comment.id}' on issue '${contextObj.number}' in '${contextObj.repo}'.`
