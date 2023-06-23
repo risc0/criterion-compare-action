@@ -100,8 +100,8 @@ async function main() {
       repo: contextObj.repo,
       issue_number: contextObj.number,
       body: ` <details>
-      <summary>Click to Expand</summary>
-      ${collapsableResults}
+      <summary>Click to Expand -- </summary>
+      ${resultsAsMarkdown}
       </details>`,
     });
     core.info(
