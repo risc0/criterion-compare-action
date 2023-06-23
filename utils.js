@@ -157,8 +157,8 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
         prettyName += " ";
     }
     // NOTE: use <details open> for default expansion of the block.
-    let benchmarks = `## Benchmark for ${prettyName}${shortSha}
-    ## Benchmark for ${prettyName}${shortSha}
+    let benchmarks = `### Benchmark for ${prettyName}${shortSha}
+    
     
   
   | Test | Base         | PR               | % |
@@ -168,7 +168,7 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
   `
   
   return `<details close>
-  <summary>Click to hide benchmark</summary>
+  <summary>Benchmark for ${prettyName}${shortSha}</summary>
   ${benchmarks}
   </details>`;
 }
