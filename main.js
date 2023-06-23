@@ -76,11 +76,15 @@ async function main() {
   core.setOutput("stdout", myOutput);
   core.setOutput("stderr", myError);
 
-  const resultsAsMarkdown = utils.convertToMarkdown(context.sha, myOutput, inputs.prettyName);
-
+  let resultsAsMarkdown = utils.convertToMarkdown(context.sha, myOutput, inputs.prettyName);
+  const collapsableResults = `
+  <details>
+  <summary>Click to Expand</summary>
+  ${resultsAsMarkdown}
+  </details>`
   // Exit early after setting output field.
   if (inputs.outputMarkdown) {
-    core.setOutput("markdown", resultsAsMarkdown);
+    core.setOutput("markdown", collapsableResults);
     console.info("Successfully set markdown as output");
     return;
   }
@@ -95,7 +99,7 @@ async function main() {
       owner: contextObj.owner,
       repo: contextObj.repo,
       issue_number: contextObj.number,
-      body: resultsAsMarkdown,
+      body: collapsableResults,
     });
     core.info(
       `Created comment id '${comment.id}' on issue '${contextObj.number}' in '${contextObj.repo}'.`
