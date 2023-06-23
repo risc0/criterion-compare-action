@@ -95,7 +95,7 @@ async function main() {
       owner: contextObj.owner,
       repo: contextObj.repo,
       issue_number: contextObj.number,
-      body: "body",
+      body: resultsAsMarkdown,
     });
     core.info(
       `Created comment id '${comment.id}' on issue '${contextObj.number}' in '${contextObj.repo}'.`

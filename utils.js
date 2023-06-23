@@ -68,15 +68,15 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
     let resultLines = results.trimRight().split("\n");
     let lines = resultLines.filter(line => !line.startsWith("--") && line != "");
 
-    if (!(lines[1].startsWith("changes") && lines[2].startsWith("base"))) {
-        return `
-        <details close>
-        <summary>Click to hide benchmark</summary>
-          ## Benchmark for ${prettyName}
-          Benchmarks have changed between the two branches, unable to diff.
-        </details>
-        `;
-    }
+    // if (!(lines[1].startsWith("changes") && lines[2].startsWith("base"))) {
+    //     return `
+    //     <details close>
+    //     <summary>Click to hide benchmark</summary>
+    //       ## Benchmark for ${prettyName}
+    //       Benchmarks have changed between the two branches, unable to diff.
+    //     </details>
+    //     `;
+    // }
 
     let benchResults = chunks(lines, 3).map(([name, changes, base]) => {
         let [_baseName, baseFactor, baseDuration, baseBandwidth] = splitResultsLine(base);
@@ -157,18 +157,20 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
         prettyName += " ";
     }
     // NOTE: use <details open> for default expansion of the block.
-    return `
-    <details close>
-    <summary>Click to hide benchmark</summary>
+    let benchmarks = `## Benchmark for ${prettyName}${shortSha}
     ## Benchmark for ${prettyName}${shortSha}
     
   
-  | Daisy Test | Base         | PR               | % |
+  | Test | Base         | PR               | % |
   |------|--------------|------------------|---|
   ${benchResults}
   
-  </details>
-  `;
+  `
+  
+  return `<details close>
+  <summary>Click to hide benchmark</summary>
+  ${benchmarks}
+  </details>`;
 }
 
 module.exports = { convertToMarkdown };
