@@ -22,6 +22,7 @@ async function main() {
   const options = {};
   let myOutput = "";
   let myError = "";
+  let benchmarkResults = {};
   if (inputs.cwd) {
     options.cwd = inputs.cwd;
   }
@@ -77,14 +78,10 @@ async function main() {
   core.setOutput("stderr", myError);
 
   let resultsAsMarkdown = utils.convertToMarkdown(context.sha, myOutput, inputs.prettyName);
-  const collapsableResults = `
-  <details>
-  <summary>Click to Expand</summary>
-  ${resultsAsMarkdown}
-  </details>`
+  benchmarkResults.append(resultsAsMarkdown);
   // Exit early after setting output field.
   if (inputs.outputMarkdown) {
-    core.setOutput("markdown", collapsableResults);
+    core.setOutput("markdown", benchmarkResults);
     console.info("Successfully set markdown as output");
     return;
   }
@@ -99,10 +96,7 @@ async function main() {
       owner: contextObj.owner,
       repo: contextObj.repo,
       issue_number: contextObj.number,
-      body: ` <details>
-      <summary>Click to Expand -- </summary>
-      ${resultsAsMarkdown}
-      </details>`,
+      body: benchmarkResults,
     });
     core.info(
       `Created comment id '${comment.id}' on issue '${contextObj.number}' in '${contextObj.repo}'.`
