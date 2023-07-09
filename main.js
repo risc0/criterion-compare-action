@@ -52,7 +52,7 @@ async function main() {
   await exec.exec(
     "cargo",
     benchCmd.concat(["--", "--save-baseline", "changes"]),
-    options
+    options,
   );
   core.debug("Changes benchmarked");
   await exec.exec("git", ["fetch"]);
@@ -64,7 +64,7 @@ async function main() {
   await exec.exec(
     "cargo",
     benchCmd.concat(["--", "--save-baseline", "base"]),
-    options
+    options,
   );
   core.debug("Base benchmarked");
 
@@ -85,7 +85,7 @@ async function main() {
   const resultsAsMarkdown = utils.convertToMarkdown(
     context.sha,
     myOutput,
-    inputs.prettyName
+    inputs.prettyName,
   );
 
   // Exit early after setting output field.
@@ -108,7 +108,7 @@ async function main() {
       body: resultsAsMarkdown,
     });
     core.info(
-      `Created comment id '${comment.id}' on issue '${contextObj.number}' in '${contextObj.repo}'.`
+      `Created comment id '${comment.id}' on issue '${contextObj.number}' in '${contextObj.repo}'.`,
     );
     core.setOutput("comment-id", comment.id);
   } catch (err) {
@@ -166,7 +166,7 @@ function convertToTableObject(results) {
           changesDuration,
           difference,
         };
-      }
+      },
     );
 
   return benchResults;

@@ -67,7 +67,7 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
 
   let resultLines = results.trimRight().split("\n");
   let lines = resultLines.filter(
-    (line) => !line.startsWith("--") && line != ""
+    (line) => !line.startsWith("--") && line != "",
   );
 
   if (!(lines[1].startsWith("changes") && lines[2].startsWith("base"))) {
@@ -102,11 +102,11 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
         let changesUnits = changesDurSplit[1].slice(-2);
         let changesDurSecs = convertDurToSeconds(
           changesDurSplit[0],
-          changesUnits
+          changesUnits,
         );
         let changesErrorSecs = convertDurToSeconds(
           changesDurSplit[1].slice(0, -2),
-          changesUnits
+          changesUnits,
         );
 
         let baseDurSplit = baseDuration.split("±");
@@ -114,7 +114,7 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
         let baseDurSecs = convertDurToSeconds(baseDurSplit[0], baseUnits);
         let baseErrorSecs = convertDurToSeconds(
           baseDurSplit[1].slice(0, -2),
-          baseUnits
+          baseUnits,
         );
 
         difference = -(1 - changesDurSecs / baseDurSecs) * 100;
@@ -127,7 +127,7 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
             changesDurSecs,
             changesErrorSecs,
             baseDurSecs,
-            baseErrorSecs
+            baseErrorSecs,
           )
         ) {
           if (changesDurSecs < baseDurSecs) {
