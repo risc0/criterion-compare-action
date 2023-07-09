@@ -1,49 +1,49 @@
 function convertDurToSeconds(dur, units) {
-    let seconds;
-    switch (units) {
-        case "s":
-            seconds = dur;
-            break;
-        case "ms":
-            seconds = dur / 1000;
-            break;
-        case "µs":
-            seconds = dur / 1000000;
-            break;
-        case "ns":
-            seconds = dur / 1000000000;
-            break;
-        default:
-            seconds = dur;
-            break;
-    }
+  let seconds;
+  switch (units) {
+    case "s":
+      seconds = dur;
+      break;
+    case "ms":
+      seconds = dur / 1000;
+      break;
+    case "µs":
+      seconds = dur / 1000000;
+      break;
+    case "ns":
+      seconds = dur / 1000000000;
+      break;
+    default:
+      seconds = dur;
+      break;
+  }
 
-    return seconds;
+  return seconds;
 }
 
 function isSignificant(changesDur, changesErr, baseDur, baseErr) {
-    if (changesDur < baseDur) {
-        return changesDur + changesErr < baseDur || baseDur - baseErr > changesDur;
-    } else {
-        return changesDur - changesErr > baseDur || baseDur + baseErr < changesDur;
-    }
+  if (changesDur < baseDur) {
+    return changesDur + changesErr < baseDur || baseDur - baseErr > changesDur;
+  } else {
+    return changesDur - changesErr > baseDur || baseDur + baseErr < changesDur;
+  }
 }
 
 function chunks(arr, n) {
-    let res = [];
-    for (let i = 0; i < arr.length; i += n) {
-        res.push(arr.slice(i, i + n));
-    }
-    return res;
+  let res = [];
+  for (let i = 0; i < arr.length; i += n) {
+    res.push(arr.slice(i, i + n));
+  }
+  return res;
 }
 
 function splitResultsLine(line) {
-    let splits = line.split(/\s{2,}/);
-    return [splits[0], splits[1], splits[2], splits[3]]
+  let splits = line.split(/\s{2,}/);
+  return [splits[0], splits[1], splits[2], splits[3]];
 }
 
 function convertToMarkdown(ctx_sha, results, prettyName) {
-    /* Example results:
+  /* Example results:
         fib/100/proof
         -------------
         new      1.00   1978.5±38.87ms  16.1 KElem/sec
@@ -65,98 +65,102 @@ function convertToMarkdown(ctx_sha, results, prettyName) {
         new      1.00     260.2±2.00ms  122.8 KElem/sec
     */
 
-    let resultLines = results.trimRight().split("\n");
-    let lines = resultLines.filter(line => !line.startsWith("--") && line != "");
+  let resultLines = results.trimRight().split("\n");
+  let lines = resultLines.filter(
+    (line) => !line.startsWith("--") && line != ""
+  );
 
-    if (!(lines[1].startsWith("changes") && lines[2].startsWith("base"))) {
-        return `## Benchmark for ${prettyName}
+  if (!(lines[1].startsWith("changes") && lines[2].startsWith("base"))) {
+    return `## Benchmark for ${prettyName}
         <details open>
           <summary>Click to hide benchmark</summary>
           Benchmarks have changed between the two branches, unable to diff.
         </details>
         `;
-    }
+  }
 
-    let benchResults = chunks(lines, 3).map(([name, changes, base]) => {
-        let [_baseName, baseFactor, baseDuration, baseBandwidth] = splitResultsLine(base);
-        let [_changesName, changesFactor, changesDuration, changesBandwidth] = splitResultsLine(changes);
+  let benchResults = chunks(lines, 3)
+    .map(([name, changes, base]) => {
+      let [_baseName, baseFactor, baseDuration, baseBandwidth] =
+        splitResultsLine(base);
+      let [_changesName, changesFactor, changesDuration, changesBandwidth] =
+        splitResultsLine(changes);
 
-        let baseUndefined = typeof baseDuration === "undefined";
-        let changesUndefined = typeof changesDuration === "undefined";
+      let baseUndefined = typeof baseDuration === "undefined";
+      let changesUndefined = typeof changesDuration === "undefined";
 
-        if (!name || (baseUndefined && changesUndefined)) {
-            return "";
+      if (!name || (baseUndefined && changesUndefined)) {
+        return "";
+      }
+
+      let difference = "N/A";
+      if (!baseUndefined && !changesUndefined) {
+        changesFactor = Number(changesFactor);
+        baseFactor = Number(baseFactor);
+
+        let changesDurSplit = changesDuration.split("±");
+        let changesUnits = changesDurSplit[1].slice(-2);
+        let changesDurSecs = convertDurToSeconds(
+          changesDurSplit[0],
+          changesUnits
+        );
+        let changesErrorSecs = convertDurToSeconds(
+          changesDurSplit[1].slice(0, -2),
+          changesUnits
+        );
+
+        let baseDurSplit = baseDuration.split("±");
+        let baseUnits = baseDurSplit[1].slice(-2);
+        let baseDurSecs = convertDurToSeconds(baseDurSplit[0], baseUnits);
+        let baseErrorSecs = convertDurToSeconds(
+          baseDurSplit[1].slice(0, -2),
+          baseUnits
+        );
+
+        difference = -(1 - changesDurSecs / baseDurSecs) * 100;
+        difference =
+          (changesDurSecs <= baseDurSecs ? "" : "+") +
+          difference.toFixed(2) +
+          "%";
+        if (
+          isSignificant(
+            changesDurSecs,
+            changesErrorSecs,
+            baseDurSecs,
+            baseErrorSecs
+          )
+        ) {
+          if (changesDurSecs < baseDurSecs) {
+            changesDuration = `**${changesDuration}**`;
+          } else if (changesDurSecs > baseDurSecs) {
+            baseDuration = `**${baseDuration}**`;
+          }
+
+          difference = `**${difference}**`;
         }
+      }
 
-        let difference = "N/A";
-        if (!baseUndefined && !changesUndefined) {
-            changesFactor = Number(changesFactor);
-            baseFactor = Number(baseFactor);
+      if (baseUndefined) {
+        baseDuration = "N/A";
+      }
 
-            let changesDurSplit = changesDuration.split("±");
-            let changesUnits = changesDurSplit[1].slice(-2);
-            let changesDurSecs = convertDurToSeconds(
-                changesDurSplit[0],
-                changesUnits
-            );
-            let changesErrorSecs = convertDurToSeconds(
-                changesDurSplit[1].slice(0, -2),
-                changesUnits
-            );
+      if (changesUndefined) {
+        changesDuration = "N/A";
+      }
 
-            let baseDurSplit = baseDuration.split("±");
-            let baseUnits = baseDurSplit[1].slice(-2);
-            let baseDurSecs = convertDurToSeconds(baseDurSplit[0], baseUnits);
-            let baseErrorSecs = convertDurToSeconds(
-                baseDurSplit[1].slice(0, -2),
-                baseUnits
-            );
+      name = name.replace(/\|/g, "\\|");
 
-            difference = -(1 - changesDurSecs / baseDurSecs) * 100;
-            difference =
-                (changesDurSecs <= baseDurSecs ? "" : "+") +
-                difference.toFixed(2) +
-                "%";
-            if (
-                isSignificant(
-                    changesDurSecs,
-                    changesErrorSecs,
-                    baseDurSecs,
-                    baseErrorSecs
-                )
-            ) {
-                if (changesDurSecs < baseDurSecs) {
-                    changesDuration = `**${changesDuration}**`;
-                } else if (changesDurSecs > baseDurSecs) {
-                    baseDuration = `**${baseDuration}**`;
-                }
+      return `| ${name} | ${baseDuration} | ${changesDuration} | ${difference} |`;
+    })
+    .join("\n");
 
-                difference = `**${difference}**`;
-            }
-        }
+  let shortSha = ctx_sha.slice(0, 7);
 
-        if (baseUndefined) {
-            baseDuration = "N/A";
-        }
-
-        if (changesUndefined) {
-            changesDuration = "N/A";
-        }
-
-        name = name.replace(/\|/g, "\\|");
-
-        return `| ${name} | ${baseDuration} | ${changesDuration} | ${difference} |`;
-    }
-    )
-        .join("\n");
-
-    let shortSha = ctx_sha.slice(0, 7);
-
-    if (prettyName) {
-        prettyName += " ";
-    }
-    // NOTE: use <details open> for default expansion of the block.
-    return `## Benchmark for ${prettyName}${shortSha}
+  if (prettyName) {
+    prettyName += " ";
+  }
+  // NOTE: use <details open> for default expansion of the block.
+  return `## Benchmark for ${prettyName}${shortSha}
   <details open>
     <summary>Click to hide benchmark</summary>
   

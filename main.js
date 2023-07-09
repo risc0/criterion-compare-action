@@ -82,7 +82,11 @@ async function main() {
   core.setOutput("stdout", myOutput);
   core.setOutput("stderr", myError);
 
-  const resultsAsMarkdown = utils.convertToMarkdown(context.sha, myOutput, inputs.prettyName);
+  const resultsAsMarkdown = utils.convertToMarkdown(
+    context.sha,
+    myOutput,
+    inputs.prettyName
+  );
 
   // Exit early after setting output field.
   if (inputs.outputMarkdown) {

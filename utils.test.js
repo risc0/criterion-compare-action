@@ -1,7 +1,7 @@
 const utils = require("./utils");
 
-test('critcmp to markdown test', () => {
-    const input_data = `
+test("critcmp to markdown test", () => {
+  const input_data = `
 fib/100/proof
 -------------
 changes     1.00     640.3±6.39ms  49.9 KElem/sec
@@ -22,17 +22,36 @@ fib/200/run
 changes     1.00     301.9±6.16ms  105.8 KElem/sec
 base        1.66     502.4±5.30ms  63.6 KElem/sec`;
 
-    let markdown = utils.convertToMarkdown("fc27559ad8d5f4a35712256ca38b94b394249d6d", input_data, "test");
-    expect(markdown.includes("Benchmark for test")).toBe(true);
-    expect(markdown.includes("| fib/100/proof | 871.3±7.24ms | **640.3±6.39ms** | **-26.51%** |")).toBe(true);
-    expect(markdown.includes("| fib/100/run | 499.5±1.59ms | **297.5±4.39ms** | **-40.44%** |")).toBe(true);
-    expect(markdown.includes("| fib/200/proof | 871.6±5.79ms | **645.8±6.61ms** | **-25.91%** |")).toBe(true);
-    expect(markdown.includes("| fib/200/run | 502.4±5.30ms | **301.9±6.16ms** | **-39.91%** |")).toBe(true);
+  let markdown = utils.convertToMarkdown(
+    "fc27559ad8d5f4a35712256ca38b94b394249d6d",
+    input_data,
+    "test"
+  );
+  expect(markdown.includes("Benchmark for test")).toBe(true);
+  expect(
+    markdown.includes(
+      "| fib/100/proof | 871.3±7.24ms | **640.3±6.39ms** | **-26.51%** |"
+    )
+  ).toBe(true);
+  expect(
+    markdown.includes(
+      "| fib/100/run | 499.5±1.59ms | **297.5±4.39ms** | **-40.44%** |"
+    )
+  ).toBe(true);
+  expect(
+    markdown.includes(
+      "| fib/200/proof | 871.6±5.79ms | **645.8±6.61ms** | **-25.91%** |"
+    )
+  ).toBe(true);
+  expect(
+    markdown.includes(
+      "| fib/200/run | 502.4±5.30ms | **301.9±6.16ms** | **-39.91%** |"
+    )
+  ).toBe(true);
 });
 
-
-test('critcmp multi-test data', () => {
-    const input_data = `
+test("critcmp multi-test data", () => {
+  const input_data = `
 fib/100/execute
 ---------------
 changes     1.00     685.3±1.10ms  2.5 KElem/sec
@@ -85,7 +104,15 @@ fib/200/run
 -----------
 base     1.00     694.2±1.47ms  92.2 KElem/sec`;
 
-    let markdown = utils.convertToMarkdown("fc27559ad8d5f4a35712256ca38b94b394249d6d", input_data, "test");
-    expect(markdown.includes("Benchmark for test")).toBe(true);
-    expect(markdown.includes("Benchmarks have changed between the two branches, unable to diff")).toBe(true);
+  let markdown = utils.convertToMarkdown(
+    "fc27559ad8d5f4a35712256ca38b94b394249d6d",
+    input_data,
+    "test"
+  );
+  expect(markdown.includes("Benchmark for test")).toBe(true);
+  expect(
+    markdown.includes(
+      "Benchmarks have changed between the two branches, unable to diff"
+    )
+  ).toBe(true);
 });
