@@ -4,9 +4,11 @@ on:
   pull_request:
     branches:
       - main
+      - risc0
   push:
     branches:
       - main
+      - risc0
 
 jobs:
   checkPrettier:

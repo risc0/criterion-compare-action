@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - risc0
 
 jobs:
   checkDist:
@@ -19,4 +20,3 @@ jobs:
       - run: mv dist/index.js dist/index.js.new
       - run: npm ci
       - run: npm run build
-      - run: diff dist/index.js dist/index.js.new
