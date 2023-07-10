@@ -92,8 +92,8 @@ async function main() {
 
   // Exit early after setting output field.
   if (inputs.outputMarkdown) {
-    io.mkdirP(path.dirname(inputs.outputMarkdown));
-    fs.writeFile(inputs.outputMarkdown, resultsAsMarkdown);
+    await io.mkdirP(path.dirname(inputs.outputMarkdown));
+    fs.writeFileSync(inputs.outputMarkdown, resultsAsMarkdown);
     core.setOutput("markdown", resultsAsMarkdown);
     console.info("Successfully set markdown as output");
     return;
