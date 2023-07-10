@@ -2,6 +2,9 @@ const { inspect } = require("util");
 const exec = require("@actions/exec");
 const core = require("@actions/core");
 const github = require("@actions/github");
+const io = require("@actions/io");
+const fs = require("fs");
+const path = require("path");
 
 const context = github.context;
 
@@ -82,13 +85,15 @@ async function main() {
   core.setOutput("stderr", myError);
 
   const resultsAsMarkdown = `## Benchmark for ${inputs.prettyName}
-\\\`\\\`\\\`
+\`\`\`
   ${myOutput}
-\\\`\\\`\\\`
+\`\`\`
 `;
 
   // Exit early after setting output field.
   if (inputs.outputMarkdown) {
+    io.mkdirP(path.dirname(inputs.outputMarkdown));
+    fs.writeFile(inputs.outputMarkdown, resultsAsMarkdown);
     core.setOutput("markdown", resultsAsMarkdown);
     console.info("Successfully set markdown as output");
     return;

@@ -32,7 +32,7 @@ inputs:
   outputMarkdown:
     description: "Disables comment creation and just creates a action output named `markdown` containing the markdown of the comment"
     required: false
-    default: false
+    default: ""
   prettyName:
     description: "A pretty name to add to the PR comment output, useful for matrix based benchmarks"
     required: false
