@@ -82,9 +82,9 @@ async function main() {
   core.setOutput("stderr", myError);
 
   const resultsAsMarkdown = `## Benchmark for ${inputs.prettyName}
-\`\`\`
+\\\`\\\`\\\`
   ${myOutput}
-\`\`\`
+\\\`\\\`\\\`
 `;
 
   // Exit early after setting output field.
