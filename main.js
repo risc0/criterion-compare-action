@@ -2,7 +2,6 @@ const { inspect } = require("util");
 const exec = require("@actions/exec");
 const core = require("@actions/core");
 const github = require("@actions/github");
-const utils = require("./utils");
 
 const context = github.context;
 
@@ -77,16 +76,16 @@ async function main() {
     },
   };
 
-  await exec.exec("critcmp", ["base", "changes", "--list"], options);
+  await exec.exec("critcmp", ["--color", "never", "base", "changes"], options);
 
   core.setOutput("stdout", myOutput);
   core.setOutput("stderr", myError);
 
-  const resultsAsMarkdown = utils.convertToMarkdown(
-    context.sha,
-    myOutput,
-    inputs.prettyName,
-  );
+  const resultsAsMarkdown = `## Benchmark for ${inputs.prettyName}
+    <pre>
+      ${myOutput}
+    </pre>
+  `;
 
   // Exit early after setting output field.
   if (inputs.outputMarkdown) {
